@@ -2,7 +2,8 @@
 public class Tetris {
 	
 	public static void main(String[] Args){
-		Board b = new Board(10, 20);
-		b.printBoard();
+		Piece p = new TypeI(0,0,"red");
+		for(int i=0; i<10; i++)
+			p.rotate();
 	}
 }

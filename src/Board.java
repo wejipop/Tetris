@@ -4,6 +4,7 @@ public class Board {
 	private int width = 0;
 	private int height = 0;
 	private int[][] boardMatrix;
+	private P activePiece;
 	
 	//Constructor
 	Board(int width, int height){
@@ -44,6 +45,11 @@ public class Board {
 			}
 			System.out.println();
 		}
+	}
+	
+	//Valid moves are left, right, down
+	public void moveActivePiece(String move){
+		activePiece.move(boardMatrix, move);
 	}
 	
 }
