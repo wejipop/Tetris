@@ -37,10 +37,4 @@ public class TypeL extends Piece {
 		//Assign the right form
 		form = L;
 	}
-	
-	
-	@Override
-	public boolean validMove(int[][] boardMatrix, int newX, int newY){
-		return false;
-	}
 }

@@ -26,10 +26,4 @@ public class TypeS extends Piece{
 		//Assign the right form
 		form = S;
 	}
-	
-	
-	@Override
-	public boolean validMove(int[][] boardMatrix, int newX, int newY){
-		return false;
-	}
 }

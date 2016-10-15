@@ -1,4 +1,3 @@
-import java.util.*;
 
 public abstract class Piece {
 	
@@ -11,12 +10,13 @@ public abstract class Piece {
 	public void move(int[][] boardMatrix, String move){
 		int newX = getNewX(move);
 		int newY = getNewY(move);
-		if(validMove(boardMatrix, newX, newY)){
+		if(validMove(get2D_Representation(), boardMatrix, newX, newY)){
 			x = newX;
 			y = newY;
 		}
 	}
 	
+	//Getters
 	public int getNewX(String move){
 		int newX = x;
 		switch(move){
@@ -29,7 +29,6 @@ public abstract class Piece {
 		}
 		return newX;
 	}
-	
 	public int getNewY(String move){
 		int newY = y;
 		switch(move){
@@ -39,18 +38,33 @@ public abstract class Piece {
 		}
 		return newY;
 	}
-	
 	public int[][] get2D_Representation(){
 		return form[rotationState];
 	}
-	
-	public void rotate(){
-		System.out.println(rotationState+" "+form.length);
-		rotationState = (rotationState == form.length - 1? 0 : rotationState + 1);
+	public int[][] get2D_Representation(int simulatedRotation){
+		return form[simulatedRotation];
 	}
 	
 	
-	//Abstract methods need to be implemented by children pieces
-	public abstract boolean validMove(int[][] boardMatrix, int newX, int newY);
+	//Simulates a new rotation state and makes sure it is a valid move
+	public void rotate(int[][] boardMatrix){
+		int newState = (rotationState == form.length - 1? 0 : rotationState + 1);
+		if(validMove(get2D_Representation(newState), boardMatrix, x, y)){
+			rotationState = newState;
+		}
+	}
 	
+	//Checks if there is any conflicts between the board and the piece
+	//Takes a 2D representation of both piece and board, plus desired coordinates
+	public boolean validMove(int[][] pieceArray, int[][] boardMatrix, int newX, int newY){
+		for(int i=0; i<pieceArray.length; i++){
+			for(int j=0; j<pieceArray[0].length; j++){
+				if(pieceArray[i][j] == 1 && boardMatrix[newY+i][newX+j] != 0){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }
+

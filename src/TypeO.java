@@ -10,19 +10,13 @@ public class TypeO extends Piece{
 		int[][][] A = 
 				{
 					{
+						{0,1,1,0},
+						{0,1,1,0},
 						{0,0,0,0},
-						{0,1,1,0},
-						{0,1,1,0},
 						{0,0,0,0}
 					}
 				};
 		
 		form = A;
-	}
-	
-	
-	@Override
-	public boolean validMove(int[][] boardMatrix, int newX, int newY){
-		return false;
 	}
 }
