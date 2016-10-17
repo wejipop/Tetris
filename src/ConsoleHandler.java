@@ -6,6 +6,7 @@ public class ConsoleHandler implements InputOutputHandler{
 	private ConsoleKeyListener listener;
 	private JFrame gameFrame;
 	private Board gameBoard;
+	private int[][] fullGameBoard;
 	
 	ConsoleHandler(Board gameBoard) {
 		this.gameBoard = gameBoard;
@@ -24,6 +25,7 @@ public class ConsoleHandler implements InputOutputHandler{
 
 	@Override
 	public void sendDrawingSignal() {
+		fullGameBoard = gameBoard.getFullBoard();
 		gameBoard.printBoardWithPiece();
 	}
 

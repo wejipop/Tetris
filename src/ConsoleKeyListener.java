@@ -31,6 +31,10 @@ public class ConsoleKeyListener extends JPanel implements KeyListener{
 		else if(e.getKeyCode() ==  KeyEvent.VK_UP){
 			gameBoard.rotate();
 		}
+		else if(e.getKeyCode() ==  KeyEvent.VK_SPACE){
+			//testing key
+			gameBoard.freezePiece();			
+		}
 		parentHandler.sendDrawingSignal();
 	}
 

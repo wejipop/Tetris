@@ -59,12 +59,17 @@ public abstract class Piece {
 	public boolean validMove(int[][] pieceArray, int[][] boardMatrix, int newX, int newY){
 		for(int i=0; i<pieceArray.length; i++){
 			for(int j=0; j<pieceArray[0].length; j++){
-				if(pieceArray[i][j] == 1 && boardMatrix[newY+i][newX+j] != 0){
+				if(pieceArray[i][j] == BoardInfo.PIECE_CODE && (isOut(newX+j, newY+i, boardMatrix) || boardMatrix[newY+i][newX+j] != BoardInfo.EMPTY_CODE)){
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+	
+	//Index out of bounds
+	boolean isOut(int x, int y, int[][] A){
+		return y < 0 || y > A.length - 1 || x < 0 || x > A[0].length - 1;
 	}
 }
 

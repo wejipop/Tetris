@@ -1,16 +1,23 @@
 
 public class Board {
-	//Board fields
+	//Board representations constants
+	public final int EMPTY_CODE = BoardInfo.EMPTY_CODE;
+	public final int PIECE_CODE = BoardInfo.PIECE_CODE;
+	public final int WALL_CODE = BoardInfo.WALL_CODE;
+	public final int FROZEN_PIECE_CODE = BoardInfo.FROZEN_PIECE_CODE;
 	
+	//Board fields
 	private int width, height, initialX, initialY;
 	private int[][] boardMatrix;
-	private Piece activePiece;
+	private int[][] fullBoardMatrix;
+	private Piece activePiece, nextPiece;
 	
 	//Constructor
 	Board(int width, int height){
 		this.width = width;
 		this.height = height;	
 		boardMatrix  = new int[height][width];
+		fullBoardMatrix = new int[height][width];
 		initialX = width/2-2;
 		initialY = 0;
 		
@@ -19,10 +26,10 @@ public class Board {
 			for(int j=0; j<width; j++){
 				if(j==0 || j==width-1 || i==height-1)
 					// 2 represents the walls
-					boardMatrix[i][j] = 2;
+					boardMatrix[i][j] = WALL_CODE;
 				else
 					// 0 is empty space
-					boardMatrix[i][j] = 0;
+					boardMatrix[i][j] = EMPTY_CODE;
 			}
 		}
 	}
@@ -34,6 +41,20 @@ public class Board {
 	public int getHeight(){
 		return height;
 	}
+	public int[][] getFullBoard(){
+		int[][] pieceArray = activePiece.get2D_Representation();
+		//Update full board with the Piece
+		for(int i=0; i<height; i++){
+			for(int j=0; j<width; j++){
+				if(pieceContained(activePiece, j, i) && pieceArray[i-activePiece.y][j-activePiece.x] == PIECE_CODE)
+					fullBoardMatrix[i][j] = pieceArray[i-activePiece.y][j-activePiece.x];
+				else
+					fullBoardMatrix[i][j] = boardMatrix[i][j];
+			}
+		}
+		return fullBoardMatrix;
+	}
+	
 	
 	//Setters
 	public void setWidth(int width){
@@ -44,6 +65,7 @@ public class Board {
 	}
 	public void setActivePiece(Piece p){
 		activePiece = p;
+		nextPiece = PieceFactory.createRandomPiece(initialX, initialY);
 	}
 	
 	//Helper functions
@@ -58,20 +80,18 @@ public class Board {
 	}
 	
 	public void printBoardWithPiece(){
-		int[][] pieceArray = activePiece.get2D_Representation();
+		String boardString = "";
+		int[][] board = getFullBoard();
 		for(int i=0; i<height; i++){
 			for(int j=0; j<width; j++){
-				if(pieceContained(activePiece, j, i) && pieceArray[i-activePiece.y][j-activePiece.x] == 1)
-					System.out.print(pieceArray[i-activePiece.y][j-activePiece.x]+" ");
-				else if(boardMatrix[i][j] == 0)
-					System.out.print("  ");
-				else if(boardMatrix[i][j] != 0){
-					System.out.print(boardMatrix[i][j]+" ");
-				}
+				if(board[i][j] == EMPTY_CODE)
+					boardString+="  ";
+				else
+					boardString+=board[i][j]+" ";
 			}
-			System.out.println();
+			boardString+="\n";
 		}
-		System.out.println();
+		System.out.println(boardString);
 	}
 	
 	//Checks if active piece is inside given x, y coordinates
@@ -94,16 +114,60 @@ public class Board {
 	//Generates a new random active piece
 	public void randomizeNewPiece(){
 		activePiece = null;
-		activePiece = PieceFactory.createRandomPiece(initialX, initialY);
+		setActivePiece(PieceFactory.createRandomPiece(initialX, initialY));
 	}
 	
 	//Turns active piece into board wall
 	public void freezePiece(){
-		//To be implemented
+		int[][] pieceArray = activePiece.get2D_Representation();
+		for(int i=0; i<pieceArray.length; i++){
+			for(int j=0; j<pieceArray[0].length; j++){
+				//Make all the 1's into 2's
+				if(pieceArray[i][j] == PIECE_CODE)
+					boardMatrix[activePiece.y+i][activePiece.x+j] = FROZEN_PIECE_CODE;
+			}
+		}
+		checkRows();
+		setActivePiece(nextPiece);
 	}
 	
 	//Eliminates solid rows
 	public void checkRows(){
-		//To be implemented
+		//Empty all necessary rows
+		for(int i=boardMatrix.length-2; i>=0; i--){
+			if(rowContainsOnly(boardMatrix[i], FROZEN_PIECE_CODE))
+				emptyRow(boardMatrix[i]);
+		}
+		//Bring all empty rows down
+		for(int i=boardMatrix.length-2; i>=0; i--){
+			if(rowContainsOnly(boardMatrix[i], EMPTY_CODE)){
+				for(int j=i; j>0; j--)
+					switchRows(j, j-1, boardMatrix);	
+			}
+		}
 	}
+	
+	
+	//Functions necessary for checkRows algorithm
+	//--------------------------------------------------------------------
+	private void emptyRow(int[] row){
+		for(int i=0; i<row.length; i++)
+			if(row[i] != WALL_CODE)
+				row[i] = EMPTY_CODE;
+	}
+	
+	private boolean rowContainsOnly(int[] row, int value){
+		for(int i : row){
+			if(i != WALL_CODE && i != value)
+				return false;
+		}
+		return true;
+	}
+	
+	private void switchRows(int i, int j, int[][] board){
+		int[] temp = board[i];
+		board[i] =  board[j];
+		board[j] = temp;
+	}
+	//---------------------------------------------------------------------
 }
