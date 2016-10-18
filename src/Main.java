@@ -1,4 +1,5 @@
-import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main {
 	
@@ -14,7 +15,15 @@ public class Main {
 		io.sendDrawingSignal();
 		io.handleInputListeners();
 		
-//		printArray(gameBoard.getFullBoard());
+		
+		Timer timer = new Timer();
+
+		timer.schedule( new TimerTask() {
+		    public void run() {
+		       gameBoard.moveActivePiece("down");
+		       gameBoard.printBoardWithPiece();
+		    }
+		 }, 0, 1000);
 	}
 	
 	public static void printArray(int[][] A){
