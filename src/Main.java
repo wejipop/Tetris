@@ -10,20 +10,28 @@ public class Main {
 		Board gameBoard = new Board(width, height);
 		gameBoard.randomizeNewPiece();
 		
+		//Create Drawer
+		Drawer drawer = new Drawer(gameBoard.getFullBoard());
+		
 		//Setup I/O handler
+		
 		InputOutputHandler io = new ConsoleHandler(gameBoard);
 		io.sendDrawingSignal();
 		io.handleInputListeners();
-		
-		
 		Timer timer = new Timer();
 
 		timer.schedule( new TimerTask() {
+			int counter = 0;
 		    public void run() {
-		       gameBoard.moveActivePiece("down");
-		       gameBoard.printBoardWithPiece();
+		    	counter++;
+		    	if(counter == 10){
+		    		gameBoard.moveActivePiece("down");
+		    		counter = 0;
+		    	}
+		    	gameBoard.printBoardWithPiece();
+		    	drawer.refresh();
 		    }
-		 }, 0, 1000);
+		 }, 0, 100);
 	}
 	
 	public static void printArray(int[][] A){

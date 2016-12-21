@@ -17,7 +17,7 @@ public class ConsoleHandler implements InputOutputHandler{
 	@Override
 	public void handleInputListeners() {
 		gameFrame.setTitle("Tetris");
-		gameFrame.setSize(500, 500);
+		gameFrame.setSize(1000, 1600);
 		gameFrame.setVisible(true);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.add(listener);
