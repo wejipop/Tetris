@@ -1,4 +1,3 @@
-
 public class Board {
 	// Board representations constants
 	public final int EMPTY_CODE = BoardInfo.EMPTY_CODE;
@@ -125,7 +124,25 @@ public class Board {
 		setActivePiece(PieceFactory.createRandomPiece(initialX, initialY));
 	}
 
-	// Turns active piece into board wall
+	// Move down active piece before
+	public boolean movePreFreeze() {
+		boolean check = false;
+		int[][] entireBoard = getFullBoard();
+
+		for (int i = 0; i < entireBoard.length; i++) {
+			for (int j = 0; j < entireBoard[0].length; j++) {
+				if (entireBoard[i][j] == PIECE_CODE
+						&& (entireBoard[i + 1][j] == FROZEN_PIECE_CODE || entireBoard[i + 1][j] == WALL_CODE)) {
+					check = true;
+					break;
+				}
+			}
+		}
+
+		return check;
+	}
+
+	// Turns active piece into frozen piece
 	public void freezePiece() {
 		int[][] pieceArray = activePiece.get2D_Representation();
 		for (int i = 0; i < pieceArray.length; i++) {

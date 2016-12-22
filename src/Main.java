@@ -5,19 +5,14 @@ public class Main {
 	
 	public static void main(String[] Args){
 		//Create board
-		int width = 20;
+		int width = 12;
 		int height = 18;
 		Board gameBoard = new Board(width, height);
 		gameBoard.randomizeNewPiece();
 		
 		//Create Drawer
-		Drawer drawer = new Drawer(gameBoard.getFullBoard());
-		
-		//Setup I/O handler
-		
-		InputOutputHandler io = new ConsoleHandler(gameBoard);
-		io.sendDrawingSignal();
-		io.handleInputListeners();
+		Drawer drawer = new Drawer(gameBoard);
+				
 		Timer timer = new Timer();
 
 		timer.schedule( new TimerTask() {
